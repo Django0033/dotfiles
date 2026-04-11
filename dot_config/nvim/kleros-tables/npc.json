@@ -1,0 +1,13 @@
+{
+    "name": "npc",
+    "type": "simple",
+    "dice": "1d6",
+    "entries": [
+        "Merchant",
+        "Guard",
+        "Villager",
+        "Noble",
+        "Thief",
+        "Mage"
+    ]
+}

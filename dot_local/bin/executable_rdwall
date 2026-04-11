@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Directory containing your wallpapers
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+
+# Select a random wallpaper
+RANDOM_WALLPAPER=$(find "$WALLPAPER_DIR" -type f \( -name "*.jpg" -o -name "*.gif" -o -name "*.jpeg" \) | shuf -n 1)
+
+# Copy the random wallpaper to the cache
+cp $RANDOM_WALLPAPER ~/.cache/current_wallpaper.jpg
+
+# Start the swww-daemon if it's not already running
+if ! pgrep -x "swww-daemon" > /dev/null; then
+    awww-daemon &
+    sleep 1 # Give the daemon a moment to start
+fi
+
+# Load wallpaper
+awww clear-cache
+sleep 1
+awww img ~/.cache/current_wallpaper.jpg \
+    --transition-type any \
+    --transition-fps 60 \
+    --transition-duration 1
+
+matugen image ~/.cache/current_wallpaper.jpg
+
+killall waybar && waybar & disown
+killall swaync && swaync & disown
+
+# niri-genconfig generate

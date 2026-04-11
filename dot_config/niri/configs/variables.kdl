@@ -1,0 +1,9 @@
+// Export enviroment variables
+// This block can be commented out with a "/-" in front.
+/-enviroment {
+    QT_QPA_PLATFORM "wayland;xcb"
+    QT_QPA_PLATFORMTHEME "qt5ct:qt6ct"
+    SDL_VIDEODRIVER "wayland"
+    _JAVA_AWT_WM_NONEREPARENTING "1"
+    DISPLAY "0"
+}

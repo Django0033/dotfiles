@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# read -p "Route to your: " WALL
+# WALL=$(find ~/Pictures/wallpapers -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" \) | fzf --preview="kitty +kitten icat --transfer-mode memory {}")
+
+WALL=$(find ~/Pictures/wallpapers -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" \) | fzf --preview="fzf-preview {}")
+
+echo $WALL
+
+# Copy the random wallpaper to the cache
+cp $WALL ~/.cache/current_wallpaper.jpg
+
+# Start the awww-daemon if it's not already running
+if ! pgrep -x "awww-daemon" > /dev/null; then
+    awww-daemon &
+    sleep 1 # Give the daemon a moment to start
+fi
+
+# Load wallpaper
+awww clear-cache
+awww img ~/.cache/current_wallpaper.jpg \
+    --transition-type any \
+    --transition-fps 60 \
+    --transition-duration 1
+
+matugen image ~/.cache/current_wallpaper.jpg
+
+killall waybar && waybar & disown
+killall swaync && swaync & disown
+
+# niri-genconfig generate

@@ -1,0 +1,6 @@
+include "/home/django/.config/niri/configs/input.kdl"
+include "/home/django/.config/niri/configs/output.kdl"
+include "/home/django/.config/niri/configs/visuals.kdl"
+include "/home/django/.config/niri/configs/variables.kdl"
+include "/home/django/.config/niri/configs/startup.kdl"
+include "/home/django/.config/niri/configs/keybinds.kdl"

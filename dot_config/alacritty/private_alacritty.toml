@@ -1,0 +1,15 @@
+[general]
+import = [
+    "~/.config/alacritty/configs/keybindings.toml",
+    "~/.config/alacritty/configs/colors.toml",
+    "~/.config/alacritty/configs/font.toml",
+]
+
+[terminal]
+shell = {program = "/bin/fish"}
+
+[scrolling]
+history = 50000
+
+[window]
+opacity = 0.8
