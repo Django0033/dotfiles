@@ -40,3 +40,11 @@ require("obsidian").setup({
 		}
 	end)(),
 })
+
+local function leadnmap(lhs, rhs, desc)
+	vim.keymap.set("n", "<leader>" .. lhs, rhs, { desc = desc })
+end
+
+leadnmap("on", ":Obsidian new<CR>", "[O]bsidian [N]ew")
+leadnmap("oq", ":Obsidian quick_switch<CR>", "[O]bsidian [Q]uick Switch")
+leadnmap("ot", ":Obsidian tags<CR>", "[O]bsidian [T]ags")

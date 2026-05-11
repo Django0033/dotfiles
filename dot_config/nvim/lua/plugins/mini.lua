@@ -49,9 +49,16 @@ require("mini.clue").setup({
 		require("mini.clue").gen_clues.registers(),
 		require("mini.clue").gen_clues.windows(),
 		require("mini.clue").gen_clues.z(),
-		{ mode = "n", keys = "<leader>s", desc = "+[S]earch" },
+
+		{ mode = "n", keys = "<leader>k", desc = "+[K]leros" },
+		{ mode = "n", keys = "<leader>ki", desc = "+[I]ronsworn" },
+		{ mode = "n", keys = "<leader>kid", desc = "+[D]elve" },
+		{ mode = "n", keys = "<leader>kis", desc = "+[S]ettlement" },
+		{ mode = "n", keys = "<leader>kj", desc = "+[J]uice" },
 		{ mode = "n", keys = "<leader>l", desc = "+[L]onelog" },
 		{ mode = "n", keys = "<leader>ld", desc = "+[L]onelog [D]ice" },
+		{ mode = "n", keys = "<leader>o", desc = "+[O]bsidian" },
+		{ mode = "n", keys = "<leader>s", desc = "+[S]earch" },
 	},
 })
 require("mini.icons").setup()

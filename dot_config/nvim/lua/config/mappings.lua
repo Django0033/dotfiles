@@ -37,3 +37,6 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 vim.keymap.set("ia", "++", "│")
 vim.keymap.set("ia", "+C", "├──")
 vim.keymap.set("ia", "+L", "└──")
+
+nmap("o", "m`o<Esc>``", "Insert line below")
+nmap("O", "m`O<Esc>``", "Insert line above")
