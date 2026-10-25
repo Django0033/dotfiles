@@ -1,0 +1,122 @@
+#+title: Django's Emacs Plugins
+#+author: Django
+#+description: Downloaded plugins
+#+startup: showeverything
+#+options: toc:3
+
+* Plugins
+** Table of Contents :toc:
+- [[#plugins][Plugins]]
+  - [[#which-key][Which-key]]
+  - [[#general][General]]
+  - [[#toc-org][TOC-ORG]]
+  - [[#ligatures][Ligatures]]
+  - [[#denote][Denote]]
+
+** Which-key
+#+begin_src emacs-lisp
+                      (use-package which-key
+                        :ensure t
+                        :init
+                        (which-key-mode 1)
+                        :config
+                        (setq which-key-idle-delay 0.3
+                              Which-key-sort-order #'which-key-key-order-alpha
+                              Which-key-sort-uppercase-first nil
+                              which-key-add-column-padding 1
+                              which-key-max-display-columns nil
+                              which-key-min-display-lines 6
+                              which-key-side-window-slot -10
+                              which-key-side-window-max-height 0.25
+                              which-key-max-description-lenght 25
+                              which-key-allow-imprecise-window-fit t
+                              which-key-separator " -> "))
+#+end_src
+
+** General
+#+begin_src emacs-lisp
+   (use-package general
+     :ensure t
+     :demand t
+     :config
+     (general-evil-setup)
+
+   (general-create-definer general-leader/set-key
+                          :states '(normal insert visual emacs)
+                          :keymaps 'override
+                          :prefix "SPC"
+                          :global-prefix "M-SPC")
+
+  (general-leader/set-key
+   "s" '(:ignore t :wk "[S]earch")
+   "s f" '(find-file :wk "[F]iles")
+   "SPC" '(switch-to-buffer :wk "[ ]Search Buffers"))
+
+  (general-leader/set-key
+    "e" '(:ignore t :wk "[E]valuate")
+    "e r" '(eval-region :wk "[R]egion"))
+
+  (general-leader/set-key
+    "l" '(:ignore t :wk "[L]oad")
+    "l f" '(load-file :wk "[F]ile"))
+
+    (general-leader/set-key
+    "n" '(:ignore t :wk "[N]otes")
+    "n n" '(denote :wk "[N]ew Note")
+    "n f" '(denote-find-entry :wk "[F]ind Note")
+    "n l" '(denote-link :wk "[L]ink Note"))
+  )
+#+end_src
+
+** TOC-ORG
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :ensure t
+    :commands toc-org-enable
+    :init (add-hook 'org-mode-hook 'toc-org-enable))
+#+end_src
+
+** Ligatures
+#+begin_src emacs-lisp
+  ;; This assumes you've installed the package via MELPA.
+  (use-package ligature
+    :ensure t
+    :demand t
+    :config
+    ;; Enable the "www" ligature in every possible major mode
+    (ligature-set-ligatures 't '("www"))
+    ;; Enable traditional ligature support in eww-mode, if the
+    ;; `variable-pitch' face supports it
+    (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+    ;; Enable all Cascadia Code ligatures in programming modes
+    (ligature-set-ligatures 't '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                         ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                         "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                         "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                         "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                         "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                         "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                         "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                         ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                         "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                         "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                         "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                         "\\\\" "://"))
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
+    (global-ligature-mode t))
+#+end_src
+
+** Denote
+#+begin_src emacs-lisp
+          (use-package denote
+            :ensure t
+            :custom
+            (denote-directory (expand-file-name "~/Documents/denote/"))
+            (denote-date-format nil)
+            (denote-known-keywords '("emacs" "programming" "todo" "idea"))
+            :bind (("C-c n n" . denote)
+                   ("C-c n f" . denote-find-entry)
+                   ("C-c n l" . denote-link)))
+
+#+end_src

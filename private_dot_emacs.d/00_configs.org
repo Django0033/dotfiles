@@ -1,0 +1,184 @@
+#+title: Django's Emacs Configs
+#+author: Django
+#+description: Base native features configs.
+#+startup: showeverything
+#+options: toc:3
+
+* Configs
+** Table of Contents :toc_3:
+- [[#configs][Configs]]
+  - [[#options][Options]]
+    - [[#display][Display]]
+    - [[#indentation][Indentation]]
+    - [[#wrapping][Wrapping]]
+    - [[#clipboard-system][Clipboard (system)]]
+    - [[#completion-ui-fido-verticalmode---built-in][Completion UI (fido-verticalmode - built-in)]]
+    - [[#org-mode][Org Mode]]
+  - [[#mappings][Mappings]]
+    - [[#visual-line-navigation-kj][Visual Line Navigation (k/j)]]
+    - [[#centered-search-nn][Centered Search (n/N)]]
+    - [[#move-lines-altjk][Move lines (Alt+j/k)]]
+    - [[#visual-indent--][Visual Indent (< >)]]
+    - [[#join-lines-j][Join Lines (J)]]
+
+** Options
+*** Display
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (global-display-line-numbers-mode 1)
+  (setq display-line-numbers-type 'relative)
+  (global-hl-line-mode 1)
+  (setq scroll-margin 9)
+  (setq scroll-preserve-screen-position t)
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+  (load-theme 'noctalia :no-confirm)
+  (run-at-time "1 min" 60 (lambda () (load-theme 'noctalia :no-confirm)))
+  (set-frame-parameter nil 'alpha-background 80)
+  (add-to-list 'default-frame-alist '(alpha-background . 80))
+  (set-face-attribute 'default nil :family "JetBrains Mono" :height 110)
+  (set-face-attribute 'line-number nil :family "JetBrains Mono" :height 110)
+  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-10"))
+  (setq-default fill-column 80)
+  (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
+  (setq display-fill-column-indicator-character "|")
+  ;; (setq sign-column-default 1)
+  ;; (setq-default whitespace-style '(tab-mark trailing))
+#+end_src
+
+*** Indentation
+#+begin_src emacs-lisp
+  (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 4)
+  (setq-default shift-width 4)
+  (setq-default evil-shift-width 4)
+#+end_src
+
+*** Wrapping
+#+begin_src emacs-lisp
+  (setq-default word-wrap t)
+  (setq-default visual-line-mode t)
+  (setq wrap-prefix "   ")
+  ;; (setq visual-line-fringe-indicators '(left-margin .nil))
+#+end_src
+
+*** Clipboard (system)
+#+begin_src emacs-lisp
+  (setq x-select-enable-clipboard t)
+  (setq save-interprogram-paste-before-kill t)
+#+end_src
+
+*** Completion UI (fido-verticalmode - built-in)
+#+begin_src emacs-lisp
+  (fido-vertical-mode 1)
+  (setq completion-styles '(basic flex))
+  (setq completion-auto-select 'first)
+  (setq completion-auto-help 'visible)
+  (setq completions-format 'one-column)
+  (completion-preview-mode 1)
+#+end_src
+
+*** Org Mode
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (setq-local conceallevel 1)
+#+end_src
+
+** Mappings
+*** Visual Line Navigation (k/j)
+#+begin_src emacs-lisp
+  (defun evil-move-visual-down (arg)
+    (interactive "P")
+    (if (or (null arg) (consp arg))
+        (evil-next-visual-line 1)
+      (evil-next-line (prefix-numeric-value arg))))
+
+  (defun evil-move-visual-up (arg)
+    (interactive "P")
+    (if (or (null arg) (consp arg))
+        (evil-previous-visual-line 1)
+      (evil-previous-line (prefix-numeric-value arg))))
+
+  (eval-after-load 'evil
+    '(progn
+  (define-key evil-normal-state-map "k" 'evil-move-visual-up)
+  (define-key evil-normal-state-map "j" 'evil-move-visual-down)))
+#+end_src
+
+*** Centered Search (n/N)
+#+begin_src emacs-lisp
+  (defun evil-search-center-next ()
+    (interactive)
+    (evil-search-next)
+    (evil-scroll-line-to-center nil))
+
+  (defun evil-search-center-previous ()
+    (interactive)
+    (evil-search-previous)
+    (evil-scroll-line-to-center nil))
+
+  (eval-after-load 'evil
+    '(progn
+       (define-key evil-normal-state-map "n" 'evil-search-center-next)
+       (define-key evil-normal-state-map "N" 'evil-search-center-previous)))
+#+end_src
+
+*** Move lines (Alt+j/k)
+#+begin_src emacs-lisp
+  (defun move-line-down ()
+    (interactive)
+    (let ((col (current-column)))
+      (forward-line 1)
+      (transpose-lines 1)
+      (forward-line -1)
+      (move-to-column col)))
+
+  (defun move-line-up ()
+    (interactive)
+    (let ((col (current-column)))
+      (transpose-lines 1)
+      (forward-line -2)
+      (move-to-column col)))
+
+  (eval-after-load 'evil
+    '(progn
+       (define-key evil-normal-state-map (kbd "M-j") 'move-line-down)
+       (define-key evil-normal-state-map (kbd "M-k") 'move-line-up)
+       (define-key evil-visual-state-map (kbd "M-j") 'move-line-down)
+       (define-key evil-visual-state-map (kbd "M-k") 'move-line-up)))
+#+end_src
+
+*** Visual Indent (< >)
+#+begin_src emacs-lisp
+  (defun my-evil-shift-right ()
+    (interactive)
+    (evil-shift-right evil-visual-beginning evil-visual-end)
+    (evil-normal-state)
+    (evil-visual-restore))
+
+  (defun my-evil-shift-left ()
+    (interactive)
+    (evil-shift-left evil-visual-beginning evil-visual-end)
+    (evil-normal-state)
+    (evil-visual-restore))
+
+  (eval-after-load 'evil
+    '(progn
+       (define-key evil-visual-state-map (kbd "<") 'my-evil-shift-left)
+       (define-key evil-visual-state-map (kbd ">") 'my-evil-shift-right)))
+#+end_src
+
+*** Join Lines (J)
+#+begin_src emacs-lisp
+  (defun evil-join-keep-cursor ()
+    (interactive)
+    (let ((p (point)))
+      (call-interactively 'evil-join)
+      (goto-char p)))
+
+  (eval-after-load 'evil
+    '(progn
+       (define-key evil-normal-state-map "J" 'evil-join-keep-cursor)))
+#+end_src
+
