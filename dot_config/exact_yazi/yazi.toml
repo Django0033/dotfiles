@@ -1,0 +1,4 @@
+[opener]
+open = [
+    {run = "zathura %s", orphan = true},
+]
